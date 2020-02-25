@@ -1,0 +1,80 @@
+.heading{
+	width: 50%;
+	margin: 30px auto;
+	text-align: center;
+	color: 	#6B8E23;
+	background: #FFF8DC;
+	border: 2px solid #6B8E23;
+	border-radius: 20px;
+}
+form {
+	width: 50%; 
+	margin: 30px auto; 
+	border-radius: 5px; 
+	padding: 10px;
+	background: #FFF8DC;
+	border: 1px solid #6B8E23;
+	font-size: 16px;
+}
+form p {
+	color: red;
+	margin: 0px;
+}
+.habit_input {
+	width: 75%;
+	height: 15px; 
+	padding: 10px;
+	border: 2px solid #6B8E23;
+}
+.add_btn {
+	height: 39px;
+	background: #FFF8DC;
+	color: 	#6B8E23;
+	border: 2px solid #6B8E23;
+	border-radius: 5px; 
+	padding: 5px 20px;
+}
+
+table {
+    width: 50%;
+    margin: 30px auto;
+    border-collapse: collapse;
+}
+
+tr {
+	border-bottom: 1px solid #cbcbcb;
+}
+
+th, td{
+	font-size: 18px;
+	border: none;
+    height: 30px;
+    padding: 2px;
+}
+
+th {
+	font-size: 20px;
+	color: #6B8E23;
+}
+
+
+
+tr:hover {
+	background: #E9E9E9;
+}
+
+.habit {
+	text-align: center;
+	padding-left: 5px;
+}
+
+.delete{
+	text-align: center;
+}
+.delete a{
+	color: white;
+	background: #a52a2a;
+	padding: 1px 6px;
+	border-radius: 3px;
+	text-decoration: none;
+}
