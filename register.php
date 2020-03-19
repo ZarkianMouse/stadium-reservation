@@ -3,8 +3,8 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $catchphrase = $password = $confirm_password = "";
-$username_err = $catchphrase_err = $password_err = $confirm_password_err = "";
+$username = $password = $confirm_password = "";
+$username_err = $password_err = $confirm_password_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -40,14 +40,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         mysqli_stmt_close($stmt);
     }
     
-	if(empty(trim($_POST["catchphrase"]))){
-        $catchphrase_err = "Please enter a catchphrase.";     
-    } elseif(strlen(trim($_POST["catchphrase"])) < 6){
-        $catchphrase_err = "Catchphrase must have atleast 6 characters.";
-    } else{
-        $catchphrase = trim($_POST["catchphrase"]);
-    }
-    
     // Validate confirm password
     if(empty(trim($_POST["confirm_password"]))){
         $confirm_password_err = "Please confirm password.";     
@@ -62,15 +54,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO habit_users (username, catchphrase, userpass) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO habit_users (username, userpass) VALUES (?, ?)";
          
         if($stmt = mysqli_prepare($conn, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt,"sss",$param_username,$param_catchphrase, $param_userpass);
+            mysqli_stmt_bind_param($stmt,"sss",$param_username, $param_userpass);
             
             // Set parameters
             $param_username = $username;
-			$param_catchphrase = $catchphrase;
             $param_userpass = $password*1991; // Creates a password hash
             
             // Attempt to execute the prepared statement
