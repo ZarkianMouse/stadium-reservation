@@ -1,13 +1,14 @@
 
 <form method="get" action="<?php echo $_SERVER['PHP_SELF'];?>"id="price_select">
+	<caption></caption>
 	<select name="price_select" onchange="submit()">
-		<option>Please select price</option>
+		<option>Please select price ($)</option>
 			<?php
 				$price_qry = mysqli_query($conn,'SELECT DISTINCT SeatPrice FROM PriceTiers ORDER BY SeatPrice DESC');
 				while($prow = mysqli_fetch_assoc($price_qry)) {
 					echo "<option";
 					if(isset($_REQUEST['price_select']) and $_REQUEST['price_select']==$prow['SeatPrice']) echo ' selected="selected"';
-					echo ">{$prow['SeatPrice']}</option>\n";
+					echo "> {$prow['SeatPrice']}</option>\n";
 				}
 			?>
 	</select>
@@ -71,8 +72,8 @@ if($res_data = mysqli_query($conn, $sql)){
     if(mysqli_num_rows($result) > 0){
         while($row = mysqli_fetch_array($res_data)){
             echo "<tr>";
-				echo "<td>" . $row['SectionID'] . "</td>";
-				echo "<td>" . $row['SeatPrice'] . "</td>";
+				echo "<td> " . $row['SectionID'] . "</td>";
+				echo "<td> \$" . $row['SeatPrice'] . "</td>";
             echo "</tr>";
         }
     }
@@ -85,7 +86,7 @@ if($res_data = mysqli_query($conn, $sql)){
 			<th class="th_row">Price</th>
 		</tr>
 		<tr>
-			<td class="head" colspan=2><?php echo "$price_pageno out of $total_pages pages"?></td>
+			<td class="head" colspan=2><?php echo "Page $price_pageno out of $total_pages "?></td>
 		</tr>
 	</tfoot>
 
