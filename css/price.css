@@ -3,7 +3,11 @@
 	margin-left: auto;
 	margin-right: auto;
 	background-color: yellow;
+	width: 80%;
 	
+}
+.price-table caption {
+	border-radius: 10%;
 }
 .price-table .head {
 	text-align: center;
@@ -11,16 +15,14 @@
 	border-color: red;
 	color: white;
 	background-color: red;
-	border-radius: 10%;
 }
 
 .price-table tr {
-	border-style: solid;
-	border-color: red;
-	border-radius: 10%;
 	padding: 5px;
 	margin: 5px;
 }
 .price-table .th_row {
 	padding: 5px;
+	background-color: orange;
+	text-align: center;
 }
