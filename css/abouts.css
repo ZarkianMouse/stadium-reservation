@@ -23,7 +23,7 @@
 }
 
 .tabContainer .buttonContainer button:hover {
-	background-color: grey;
+	background-color: lightblue;
 }
 
 .tabContainer .tabPanel {

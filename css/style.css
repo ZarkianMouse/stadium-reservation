@@ -1,0 +1,98 @@
+body{ 
+	font: 14px sans-serif; 
+	text-align: center; 
+}
+
+.my_primary {
+	border-color: #4682B4;
+	color: white;
+	background-color: #4682B4;
+}
+
+.my_primary:hover {
+	background-color: #2C5171;
+	color: white;
+}
+
+.my_delete {
+	background-color:#A69F57;
+	border-color: #A69F57;
+	color: white;
+}
+.my_delete:hover {
+	background-color: #6E6A3A;
+	color: white;
+}
+
+.my-table {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: white;
+	width: 80%;
+	
+}
+
+.my-table caption {
+	border-radius: 10%;
+}
+
+.my-table .head {
+	text-align: center;
+	border-style: solid;
+	border-color: #4682B4;
+	color: white;
+	background-color: #4682B4;
+}
+
+.my-table tr {
+	padding: 5px;
+	margin: 5px;
+}
+
+.my-table tr:hover {
+	background-color: #F5F5F5;
+}
+.my-table .th_row {
+	padding: 5px;
+	background-color: #DDD474;
+	text-align: center;
+}
+
+
+
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}

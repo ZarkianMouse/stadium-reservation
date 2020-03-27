@@ -17,46 +17,45 @@ else {
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-	<link rel="stylesheet" href="css/price.css">
-	<link rel="stylesheet" href="css/seats.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/abouts.css">
-    <style type="text/css">
-        body{ font: 14px sans-serif; text-align: center; }
-    </style>
+
 </head>
 <body>
     <div class="page-header">
-        <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to our site.</h1>
-		<br/>
+        <h1>
+			Welcome to <em>Stadium Reservations</em></h1>
+		<h3>
+			User <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>'s Actions
+		</h3>
 		 <p>
-			<a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
-			<a href="logout.php" class="btn btn-danger">Sign Out of Your Account</a>
+			<a href="logout.php" class="btn btn-default my_primary">Sign Out of Your Account</a>
+			<a href="delete.php" class="btn btn-default my_delete" style="">Delete Your Account</a>
 		</p>
     </div>
    <div class="tabContainer">
 		<div class="buttonContainer">
-			<button onclick="showPanel(0,'grey')">View Price Tiers</button>
-			<button onclick="showPanel(1,'grey')">View Available Seats</button>
-			<button onclick="showPanel(2,'lightgrey')">Pagination Example</button>
+			<button onclick="showPanel(0,'prices')">View Price Tiers</button>
+			<button onclick="showPanel(1,'seats')">View Available Seats</button>
 		</div>
-		<div class="tabPanel">
+		<div  class="tabPanel" id="prices" >
 			<div class="content">
-				<div class="edu">
-				<?php include 'price-tiers.php' ?>
-				</div>
+				<?php include 'prices.php' ?>
 			</div>
 		</div>
-		<div class="tabPanel">
+		<div class="tabPanel" id="seats" >
 			<div class="content">
-				<div class="exp_body">
 				<?php include 'seats.php' ?>
-				</div>
 			</div>
 		</div>
-		<div class="tabPanel">
-			<?php include 'page-ex.php' ?>
-		</div>
-	<<script src="js/about.js" type="text/javascript"></script>
+		
+	</div>
+	
+	
+	<script src="js/about.js" type="text/javascript"></script>
 </body>
 </html>
