@@ -9,6 +9,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 }
 else {
 	require_once "config.php";
+	$href="?";
 }
 ?>
  
@@ -39,17 +40,19 @@ else {
     </div>
    <div class="tabContainer">
 		<div class="buttonContainer">
-			<button onclick="showPanel(0,'prices')">View Price Tiers</button>
-			<button onclick="showPanel(1,'seats')">View Available Seats</button>
+			<button onclick="showPanel(0,'prices')">View Sections</button>
+			<button onclick="showPanel(1,'seats')">Unrelated</button>
 		</div>
 		<div  class="tabPanel" id="prices" >
 			<div class="content">
-				<?php include 'prices.php' ?>
+				<?php include 'section-finder.php' ?>
+
 			</div>
+			
 		</div>
 		<div class="tabPanel" id="seats" >
 			<div class="content">
-				<?php include 'seats.php' ?>
+				
 			</div>
 		</div>
 		

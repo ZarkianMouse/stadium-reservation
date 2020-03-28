@@ -6,14 +6,14 @@ function showPanel(panelIndex,colorCode) {
 		node.style.backgroundColor="";
 		node.style.color="";
 	});
-	tabButtons[panelIndex].style.backgroundColor='lightyellow';
+	tabButtons[panelIndex].style.backgroundColor="lightyellow";
 	tabButtons[panelIndex].style.color="black";
 	tabPanels.forEach(function(node) {
 		node.style.display="none";
 	});
 
 	tabPanels[panelIndex].style.display="block";
-	tabPanels[panelIndex].style.backgroundColor='lightyellow';
+	tabPanels[panelIndex].style.backgroundColor="lightyellow";
 
 }
 showPanel(0,'prices');
