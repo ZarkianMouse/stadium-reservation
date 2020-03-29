@@ -148,6 +148,7 @@
 
 </table>
  <ul class="pagination">
+	<li><a href="?price_pageno=1<?php if($hrf != "" ){echo $hrf;} ?>">First</a></li>
 	<li class="<?php if($price_pageno <= 1){ echo 'disabled'; } ?>">
 		<a href="<?php if($price_pageno <= 1){ echo '#'; } elseif($hrf != "" ){echo "?price_pageno=".($price_pageno - 1).$hrf;} else { echo "?price_pageno=".($price_pageno - 1); } ?>">Prev</a>
 	</li>
