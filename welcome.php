@@ -27,16 +27,17 @@ else {
 
 </head>
 <body>
-    <div class="page-header">
-        <h1>
-			Welcome to <em>Stadium Reservations</em></h1>
-		<h3>
-			User <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>'s Actions
-		</h3>
-		 <p>
-			<a href="logout.php" class="btn btn-default my_primary">Sign Out of Your Account</a>
-			<a href="delete.php" class="btn btn-default my_delete" style="">Delete Your Account</a>
-		</p>
+     <div class="page-header site_head">
+        <p class="site_name">Welcome to <em>Stadium Reservations</em></p>
+		<div class="site_nav">
+			<h3>
+				Good day, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>!
+			</h3>
+			<p>
+				<a href="logout.php" class="btn btn-default my_primary">Sign Out of Your Account</a>
+				<a href="delete.php" class="btn btn-default my_delete" style="">Delete Your Account</a>
+			</p>
+		</div>
     </div>
    <div class="tabContainer">
 		<div class="buttonContainer">
