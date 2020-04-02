@@ -41,7 +41,7 @@ else {
    <div class="tabContainer">
 		<div class="buttonContainer">
 			<button onclick="showPanel(0,'prices')">View Sections</button>
-			<button onclick="showPanel(1,'seats')">Unrelated</button>
+			<button onclick="showPanel(1,'seats')">View Reservations</button>
 		</div>
 		<div  class="tabPanel" id="prices" >
 			<div class="content">
@@ -52,7 +52,7 @@ else {
 		</div>
 		<div class="tabPanel" id="seats" >
 			<div class="content">
-				
+				<?php include 'Reservation-Finder.php' ?>
 			</div>
 		</div>
 		
@@ -60,5 +60,11 @@ else {
 	
 	
 	<script src="js/about.js" type="text/javascript"></script>
+	<script src="js/about.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"> 
+	</script> 
+	<script src= 
+ 	"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"> 
+	</script>
 </body>
 </html>

@@ -123,7 +123,8 @@
 			if($res_data = mysqli_query($conn, $sql)){
 				if(mysqli_num_rows($result) > 0){
 					while($row = mysqli_fetch_array($res_data)){
-						echo "<tr>";
+						echo "<tr class=\"clickable text-center\" 
+						onclick=\"window.location= 'Seat-Reservation.php?SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."' \">";
 							echo "<td> " . $row['SeatID'] . "</td>";
 							echo "<td> " . $row['RowID'] . "</td>";
 							echo "<td>" . $row['SectionID'] . "</td>";
@@ -158,5 +159,9 @@
 	<li><a href="?price_pageno=<?php if($hrf != "" ){echo $total_pages.$hrf; }else {echo $total_pages;} ?>">Last</a></li>
 </ul>
 
-
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"> 
+</script> 
+<script src= 
+ "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"> 
+</script>
 
