@@ -61,7 +61,6 @@ else {
 	
 	
 	<script src="js/about.js" type="text/javascript"></script>
-	<script src="js/about.js" type="text/javascript"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"> 
 	</script> 
 	<script src= 

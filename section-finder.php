@@ -2,7 +2,12 @@
 	<select name="psect_select" onchange="submit()">
 		<option>Please select section</option>
 			<?php
-				$seat_qry = mysqli_query($conn,'SELECT DISTINCT SectionID FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL ORDER BY SectionID ASC');
+				$seat_sql = "SELECT DISTINCT pt.SectionID FROM PriceTiers pt 
+							  JOIN Seats s ON pt.SectionID = s.SectionID 
+							  LEFT OUTER JOIN Reservations r 
+							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY pt.SectionID ASC";
+				$seat_qry = mysqli_query($conn,$seat_sql);
 				while($prow = mysqli_fetch_assoc($seat_qry)) {
 					echo "<option";
 					if(isset($_REQUEST['psect_select']) and $_REQUEST['psect_select']==$prow['SectionID']) echo ' selected="selected"';
@@ -13,7 +18,12 @@
 	<select id="row_select" name="row_select" onchange="submit()">
 		<option>Please select row</option>
 			<?php
-				$row_qry = mysqli_query($conn,'SELECT DISTINCT RowID FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL ORDER BY RowID ASC');
+				$row_sql = "SELECT DISTINCT s.RowID FROM PriceTiers pt 
+							  JOIN Seats s ON pt.SectionID = s.SectionID 
+							  LEFT OUTER JOIN Reservations r 
+							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY s.RowID ASC";
+				$row_qry = mysqli_query($conn,$row_sql);
 				while($rrow = mysqli_fetch_assoc($row_qry)) {
 					echo "<option";
 					if(isset($_REQUEST['row_select']) and $_REQUEST['row_select']==$rrow['RowID']) echo ' selected="selected"';
@@ -24,7 +34,12 @@
 	<select id="price_select" name="price_select" onchange="submit()">
 		<option>Please select price ($)</option>
 			<?php
-				$price_qry = mysqli_query($conn,'SELECT DISTINCT SeatPrice FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL ORDER BY SeatPrice DESC');
+				$price_sql = "SELECT DISTINCT pt.SeatPrice FROM PriceTiers pt 
+							  JOIN Seats s ON pt.SectionID = s.SectionID 
+							  LEFT OUTER JOIN Reservations r 
+							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY SeatPrice DESC";
+				$price_qry = mysqli_query($conn,$price_sql);
 				while($prow = mysqli_fetch_assoc($price_qry)) {
 					echo "<option";
 					if(isset($_REQUEST['price_select']) and $_REQUEST['price_select']==$prow['SeatPrice']) echo ' selected="selected"';
@@ -45,7 +60,7 @@
 			$p = "&price_select=".$_GET['price_select'];
 			$hrf .= $p;
 			if ($_GET['price_select']!="Please select price ($)") {
-			$condition		.=	"AND SeatPrice='".$_GET['price_select']."' ";
+			$condition		.=	"AND pt.SeatPrice='".$_GET['price_select']."' ";
 			}
 		}
 		if(isset($_GET['psect_select']) and $_GET['psect_select']!="")
@@ -54,7 +69,7 @@
 			$s = "&psect_select=".$_GET['psect_select'];
 			$hrf .= $s;
 			if ($_GET['psect_select']!="Please select section") {
-			$condition		.= "AND SectionID = '".$_GET['psect_select']."' ";
+			$condition		.= "AND pt.SectionID = '".$_GET['psect_select']."' ";
 			}
 		}
 		if(isset($_GET['row_select']) and $_GET['row_select']!="" and $_GET['row_select']!="Please select row")
@@ -62,12 +77,11 @@
 			$r = "&row_select=".$_GET['row_select'];
 			$hrf .= $r;
 			if($_GET['row_select']!="Please select row") {
-			$condition		.= "AND RowID = '".$_GET['row_select']."'";
+			$condition		.= "AND s.RowID = '".$_GET['row_select']."'";
 			}
 		}
-		
-		
 		echo "<span> the condition is $condition </span>";
+		$event = 2;
 		
 		if (isset($_GET['price_pageno'])) {
             $price_pageno = $_GET['price_pageno'];
@@ -78,8 +92,13 @@
         $offset = ($price_pageno-1) * $no_of_records_per_page;
 
 
-        $total_pages_sql = "SELECT COUNT(*) FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL $condition 
-			ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC";
+        $total_pages_sql = "SELECT COUNT(*)
+							FROM PriceTiers pt 
+							JOIN Seats s ON pt.SectionID = s.SectionID 
+							LEFT OUTER JOIN Reservations r 
+							ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+							WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
+							ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
         $result = mysqli_query($conn,$total_pages_sql);
         $total_rows = mysqli_fetch_array($result)[0];
         $total_pages = ceil($total_rows / $no_of_records_per_page);
@@ -96,8 +115,13 @@
         $offset = ($price_pageno-1) * $no_of_records_per_page;
 
 
-        $total_pages_sql = "SELECT COUNT(*) FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL $condition
-			ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC";
+        $total_pages_sql = "SELECT COUNT(*)
+							FROM PriceTiers pt 
+							JOIN Seats s ON pt.SectionID = s.SectionID 
+							LEFT OUTER JOIN Reservations r 
+							ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+							WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
+							ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
         $result = mysqli_query($conn,$total_pages_sql);
         $total_rows = mysqli_fetch_array($result)[0];
         $total_pages = ceil($total_rows / $no_of_records_per_page);
@@ -117,21 +141,34 @@
 	</thead>
 	<tbody>
 		<?php
-			$sql = "SELECT SectionID, RowID, SeatPrice, SeatID FROM PriceTiers NATURAL JOIN Seats WHERE UserID is NULL $condition
-				ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC, SeatID ASC LIMIT $offset, $no_of_records_per_page";
+			$sql ="SELECT pt.SeatPrice, pt.SectionID, s.RowID, s.SeatID
+					FROM PriceTiers pt 
+					JOIN Seats s ON pt.SectionID = s.SectionID 
+					LEFT OUTER JOIN Reservations r 
+					ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+					WHERE r.EventID <> '$event' OR r.eventID is NULL $condition 
+					ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC 
+					LIMIT $offset, $no_of_records_per_page";
 				
 			if($res_data = mysqli_query($conn, $sql)){
-				if(mysqli_num_rows($result) > 0){
+				if(mysqli_num_rows($result) > 0 and mysqli_fetch_array($res_data)){
 					while($row = mysqli_fetch_array($res_data)){
 						echo "<tr class=\"clickable text-center\" 
-						onclick=\"window.location= 'Seat-Reservation.php?SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."' \">";
+						onclick=\"window.location= 'Seat-Reservation.php?EventID=$event&SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."' \">";
 							echo "<td> " . $row['SeatID'] . "</td>";
 							echo "<td> " . $row['RowID'] . "</td>";
 							echo "<td>" . $row['SectionID'] . "</td>";
-							echo "<td> \$" . $row['SeatPrice'] . "</td>";
+							echo "<td>" . $row['SeatPrice'] . "</td>";
 						echo "</tr>";
 					}
 				}
+				else {
+					echo "<tr><td colspan=4 >No rows available</td></tr>";
+				}
+			}
+			else {
+				echo "<tr><td>Query Failed</td></tr>";
+				
 			}
 		?>
 	</tbody>
