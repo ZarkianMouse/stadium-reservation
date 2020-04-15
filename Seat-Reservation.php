@@ -17,6 +17,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1); 
 error_reporting(E_ALL);
 
+$eventID = $_GET['EventID'];
 $SeatID = $_GET['SeatID'];
 $RowID = $_GET['RowID'];
 $SectionID = $_GET['SectionID'];
@@ -28,7 +29,7 @@ echo $SectionID;
 echo $param_id;
 
 
-if($seat_update = mysqli_query($conn,"UPDATE Seats SET UserID = '$param_id' WHERE (SeatID = '$SeatID' AND RowID = '$RowID' AND SectionID = '$SectionID')")){
+if($seat_update = mysqli_query($conn,"INSERT INTO Reservations(UserID, EventID, SeatID, RowID, SectionID) VALUES ('$param_id', '$eventID', '$SeatID', '$RowID', '$SectionID')")){
     header("location: welcome.php");
     exit();
 }

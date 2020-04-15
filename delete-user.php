@@ -54,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		
 		
         // Prepare an update statement
-        $sql = "UPDATE Seats SET UserID = NULL WHERE UserID = ?";
+        $sql = "DELETE FROM Reservations WHERE UserID = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
             // Bind variables to the prepared statement as parameters
