@@ -65,7 +65,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
-                // Seats updated successfully. Destroy the session, and redirect to login page
+                // Reservations updated successfully. Destroy the session, and redirect to login page
 				echo "successfully remove seats";
 				// Prepare a delete statement
 				$sql = "DELETE FROM Users WHERE UserID = ?";

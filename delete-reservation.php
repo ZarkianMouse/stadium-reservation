@@ -33,7 +33,7 @@ if($seat_update = mysqli_query($conn,"DELETE FROM Reservations WHERE (UserID = $
     header("location: welcome.php");
     exit();
 }
-else{echo "No Work";}
+else{echo "Query Failed";}
 
 
 ?>
