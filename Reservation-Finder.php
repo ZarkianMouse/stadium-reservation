@@ -39,7 +39,7 @@ $param_id = $_SESSION["id"];
 
 <?php
 
-	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select'])) {
+	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
 			$condition	=	"";
 			$hrf = "";
 			
@@ -71,39 +71,28 @@ $param_id = $_SESSION["id"];
 		
 		
 		echo "<span> the condition is $condition </span>";
-		
-		if (isset($_GET['reserve_pageno'])) {
-            $reserve_pageno = $_GET['reserve_pageno'];
-        } else {
-            $reserve_pageno = 1;
-        }
-		$no_of_records_per_page = 10;
-        $offset = ($reserve_pageno-1) * $no_of_records_per_page;
-
-
-        $total_pages_sql = "SELECT COUNT(*) FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' $condition 
-			ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC";
-        $result = mysqli_query($conn,$total_pages_sql);
-        $total_rows = mysqli_fetch_array($result)[0];
-        $total_pages = ceil($total_rows / $no_of_records_per_page);
 	}
 	else {
 		$condition		=	"";
-		
-		if (isset($_GET['reserve_pageno'])) {
-            $reserve_pageno = $_GET['reserve_pageno'];
-        } else {
-            $reserve_pageno = 1;
-        }
-		$no_of_records_per_page = 10;
-        $offset = ($reserve_pageno-1) * $no_of_records_per_page;
+	}
+	
+	if (isset($_GET['reserve_pageno'])) {
+		$reserve_pageno = $_GET['reserve_pageno'];
+	} else {
+		$reserve_pageno = 1;
+	}
+	$no_of_records_per_page = 10;
+	$offset = ($reserve_pageno-1) * $no_of_records_per_page;
 
 
-        $total_pages_sql = "SELECT COUNT(*) FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' $condition
-			ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC";
-        $result = mysqli_query($conn,$total_pages_sql);
-        $total_rows = mysqli_fetch_array($result)[0];
-        $total_pages = ceil($total_rows / $no_of_records_per_page);
+	$total_pages_sql = "SELECT COUNT(*) FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' $condition
+		ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC";
+	$result = mysqli_query($conn,$total_pages_sql);
+	$total_rows = mysqli_fetch_array($result)[0];
+	$total_pages = ceil($total_rows / $no_of_records_per_page);
+	if($total_pages == 0)
+	{
+		$reserve_pageno = 0;
 	}
 ?>
 
@@ -121,18 +110,19 @@ $param_id = $_SESSION["id"];
 	</thead>
 	<tbody>
 		<?php
-			$sql = "SELECT SectionID, RowID, SeatPrice, SeatID, EventID 
+			$sql = "SELECT SectionID, RowID, SeatPrice, SeatID, EventID, EventName 
 					FROM PriceTiers 
-					NATURAL JOIN Reservations 
+					NATURAL JOIN Reservations
+					NATURAL JOIN Events
 					WHERE UserID = '$param_id' $condition
 				    ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC, SeatID ASC LIMIT $offset, $no_of_records_per_page";
 				
 			if($res_data = mysqli_query($conn, $sql)){
-				if(mysqli_num_rows($result) > 0){
+				if(mysqli_num_rows($result) > 0 and mysqli_fetch_array($res_data)){
 					while($row = mysqli_fetch_array($res_data)){
 						echo "<tr class=\"clickable text-center\" 
 						onclick=\"window.location= 'delete-reservation.php?EventID=".$row['EventID']."&SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."' \">";
-							echo "<td> " . $row['EventID'] . "</td>";
+							echo "<td> " . $row['EventName'] . "</td>";
 							echo "<td> " . $row['SeatID'] . "</td>";
 							echo "<td> " . $row['RowID'] . "</td>";
 							echo "<td>" . $row['SectionID'] . "</td>";
@@ -140,6 +130,12 @@ $param_id = $_SESSION["id"];
 						echo "</tr>";
 					}
 				}
+				else {
+					echo "<tr><td colspan=5 >No rows available</td></tr>";
+				}
+			}
+			else {
+				echo "<tr><td colspan=5 >Query Failed: No rows available</td></tr>";
 			}
 		?>
 	</tbody>
