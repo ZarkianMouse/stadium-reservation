@@ -121,8 +121,11 @@ $param_id = $_SESSION["id"];
 	</thead>
 	<tbody>
 		<?php
-			$sql = "SELECT SectionID, RowID, SeatPrice, SeatID, EventID FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' $condition
-				ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC, SeatID ASC LIMIT $offset, $no_of_records_per_page";
+			$sql = "SELECT SectionID, RowID, SeatPrice, SeatID, EventID 
+					FROM PriceTiers 
+					NATURAL JOIN Reservations 
+					WHERE UserID = '$param_id' $condition
+				    ORDER BY SeatPrice DESC, SectionID ASC, RowID ASC, SeatID ASC LIMIT $offset, $no_of_records_per_page";
 				
 			if($res_data = mysqli_query($conn, $sql)){
 				if(mysqli_num_rows($result) > 0){

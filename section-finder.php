@@ -50,11 +50,12 @@
 </form>
 
 <?php
-
-	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select'])) {
+	// This statement evaluates what form fields were set
+	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
 			$condition	=	"";
 			$hrf = "";
-			
+		
+		// check field for SeatPrice
 		if(isset($_GET['price_select']) and $_GET['price_select']!="")
 		{
 			$p = "&price_select=".$_GET['price_select'];
@@ -63,6 +64,8 @@
 			$condition		.=	"AND pt.SeatPrice='".$_GET['price_select']."' ";
 			}
 		}
+		
+		// check field for SectionID
 		if(isset($_GET['psect_select']) and $_GET['psect_select']!="")
 		{
 			
@@ -72,6 +75,8 @@
 			$condition		.= "AND pt.SectionID = '".$_GET['psect_select']."' ";
 			}
 		}
+		
+		// check field for RowID
 		if(isset($_GET['row_select']) and $_GET['row_select']!="" and $_GET['row_select']!="Please select row")
 		{
 			$r = "&row_select=".$_GET['row_select'];
@@ -81,51 +86,39 @@
 			}
 		}
 		echo "<span> the condition is $condition </span>";
-		$event = 2;
-		
-		if (isset($_GET['price_pageno'])) {
-            $price_pageno = $_GET['price_pageno'];
-        } else {
-            $price_pageno = 1;
-        }
-		$no_of_records_per_page = 10;
-        $offset = ($price_pageno-1) * $no_of_records_per_page;
-
-
-        $total_pages_sql = "SELECT COUNT(*)
-							FROM PriceTiers pt 
-							JOIN Seats s ON pt.SectionID = s.SectionID 
-							LEFT OUTER JOIN Reservations r 
-							ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-							WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
-							ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
-        $result = mysqli_query($conn,$total_pages_sql);
-        $total_rows = mysqli_fetch_array($result)[0];
-        $total_pages = ceil($total_rows / $no_of_records_per_page);
 	}
+	// if no form fields are set, empty condition
 	else {
 		$condition		=	"";
-		
-		if (isset($_GET['price_pageno'])) {
-            $price_pageno = $_GET['price_pageno'];
-        } else {
-            $price_pageno = 1;
-        }
-		$no_of_records_per_page = 10;
-        $offset = ($price_pageno-1) * $no_of_records_per_page;
-
-
-        $total_pages_sql = "SELECT COUNT(*)
-							FROM PriceTiers pt 
-							JOIN Seats s ON pt.SectionID = s.SectionID 
-							LEFT OUTER JOIN Reservations r 
-							ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-							WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
-							ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
-        $result = mysqli_query($conn,$total_pages_sql);
-        $total_rows = mysqli_fetch_array($result)[0];
-        $total_pages = ceil($total_rows / $no_of_records_per_page);
 	}
+	
+	// an example event number for testing
+	$event = 2;
+	
+	// for current page in table
+	if (isset($_GET['price_pageno'])) {
+		$price_pageno = $_GET['price_pageno'];
+	} else {
+		$price_pageno = 1;
+	}
+	
+	// for limiting number of entries in table
+	$no_of_records_per_page = 10;
+	
+	// for monitoring page in table
+	$offset = ($price_pageno-1) * $no_of_records_per_page;
+
+	// for counting total number of entries in table based on condition
+	$total_pages_sql = "SELECT COUNT(*)
+						FROM PriceTiers pt 
+						JOIN Seats s ON pt.SectionID = s.SectionID 
+						LEFT OUTER JOIN Reservations r 
+						ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+						WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
+						ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
+	$result = mysqli_query($conn,$total_pages_sql);
+	$total_rows = mysqli_fetch_array($result)[0];
+	$total_pages = ceil($total_rows / $no_of_records_per_page);
 ?>
 
 
