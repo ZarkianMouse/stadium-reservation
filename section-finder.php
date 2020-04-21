@@ -119,6 +119,10 @@
 	$result = mysqli_query($conn,$total_pages_sql);
 	$total_rows = mysqli_fetch_array($result)[0];
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
+	if($total_pages == 0)
+	{
+		$price_pageno = 0;
+	}
 ?>
 
 
@@ -160,8 +164,7 @@
 				}
 			}
 			else {
-				echo "<tr><td>Query Failed</td></tr>";
-				
+				echo "<tr><td colspan=4>Query Failed: No rows available</td></tr>";
 			}
 		?>
 	</tbody>
