@@ -41,12 +41,19 @@ else {
     </div>
    <div class="tabContainer">
 		<div class="buttonContainer">
-			<button onclick="showPanel(0,'prices')">View Sections</button>
+			<button onclick="showPanel(0,'prices')">View Events</button>
 			<button onclick="showPanel(1,'seats')">View Reservations</button>
 		</div>
 		<div  class="tabPanel" id="prices" >
 			<div class="content">
-				<?php include 'section-finder.php' ?>
+				<?php if(isset($_GET['EventID']) and $_GET['EventID'] != "")
+						{
+							include 'section-finder.php';
+						}
+					  else {
+						  include 'event-selector.php';
+					  }
+					?>
 
 			</div>
 			

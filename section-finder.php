@@ -1,59 +1,33 @@
-<form method="get" action="welcome.php" id="seat_select">
-	<select name="psect_select" onchange="submit()">
-		<option>Please select section</option>
-			<?php
-				$seat_sql = "SELECT DISTINCT pt.SectionID FROM PriceTiers pt 
-							  JOIN Seats s ON pt.SectionID = s.SectionID 
-							  LEFT OUTER JOIN Reservations r 
-							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY pt.SectionID ASC";
-				$seat_qry = mysqli_query($conn,$seat_sql);
-				while($prow = mysqli_fetch_assoc($seat_qry)) {
-					echo "<option";
-					if(isset($_REQUEST['psect_select']) and $_REQUEST['psect_select']==$prow['SectionID']) echo ' selected="selected"';
-					echo "> {$prow['SectionID']}</option>\n";
-				}
-			?>
-	</select>
-	<select id="row_select" name="row_select" onchange="submit()">
-		<option>Please select row</option>
-			<?php
-				$row_sql = "SELECT DISTINCT s.RowID FROM PriceTiers pt 
-							  JOIN Seats s ON pt.SectionID = s.SectionID 
-							  LEFT OUTER JOIN Reservations r 
-							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY s.RowID ASC";
-				$row_qry = mysqli_query($conn,$row_sql);
-				while($rrow = mysqli_fetch_assoc($row_qry)) {
-					echo "<option";
-					if(isset($_REQUEST['row_select']) and $_REQUEST['row_select']==$rrow['RowID']) echo ' selected="selected"';
-					echo "> {$rrow['RowID']}</option>\n";
-				}
-			?>
-	</select>
-	<select id="price_select" name="price_select" onchange="submit()">
-		<option>Please select price ($)</option>
-			<?php
-				$price_sql = "SELECT DISTINCT pt.SeatPrice FROM PriceTiers pt 
-							  JOIN Seats s ON pt.SectionID = s.SectionID 
-							  LEFT OUTER JOIN Reservations r 
-							  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-							  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY SeatPrice DESC";
-				$price_qry = mysqli_query($conn,$price_sql);
-				while($prow = mysqli_fetch_assoc($price_qry)) {
-					echo "<option";
-					if(isset($_REQUEST['price_select']) and $_REQUEST['price_select']==$prow['SeatPrice']) echo ' selected="selected"';
-					echo "> {$prow['SeatPrice']}</option>\n";
-				}
-			?>
-	</select>
-</form>
+<?php
+	$hrf = "";
+	// an example event number for testing
+	if (isset($_GET['EventID']) and $_GET['EventID']!="")
+	{
+		$event = $_GET['EventID'];
+		$hrf .= "&EventID=".$_GET['EventID'];
+	}
+	else {
+		$event = 2;
+	}
+?>
 
 <?php
+	
 	// This statement evaluates what form fields were set
 	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
 			$condition	=	"";
-			$hrf = "";
+			
+		
+		$hrf = "";
+		// an example event number for testing
+		if (isset($_GET['EventID']) and $_GET['EventID']!="")
+		{
+			$event = $_GET['EventID'];
+			$hrf .= "&EventID=".$_GET['EventID'];
+		}
+		else {
+			$event = 2;
+		}
 		
 		// check field for SeatPrice
 		if(isset($_GET['price_select']) and $_GET['price_select']!="")
@@ -85,15 +59,13 @@
 			$condition		.= "AND s.RowID = '".$_GET['row_select']."'";
 			}
 		}
-		echo "<span> the condition is $condition </span>";
 	}
 	// if no form fields are set, empty condition
 	else {
 		$condition		=	"";
 	}
 	
-	// an example event number for testing
-	$event = 2;
+	
 	
 	// for current page in table
 	if (isset($_GET['price_pageno'])) {
@@ -125,15 +97,99 @@
 	}
 ?>
 
+<style>
+	.my_other {
+		border-color: #2C5171;
+		color: white;
+		background-color: #2C5171;
+		width: 100%;
+	}
+
+	.my_other:hover {
+		background-color: #2C5171;
+		color: white;
+	}
+</style>
 
 <table id="price-table" class="my-table">
-	<caption class="head">Section Prices</caption>
+	<caption class="head" style="background-color: #2C5171">
+			<?php
+				$even_sql ="SELECT EventName,EventDate FROM Events WHERE EventID = '$event'";
+				if($even = mysqli_query($conn, $even_sql)){
+						if(mysqli_num_rows($even) > 0){
+							$row = mysqli_fetch_array($even);
+							echo "<span style=\"font-size: 25px;\">".date("m/d/y",strtotime($row['EventDate'] ))."</span>";
+							
+							echo "<br/><b>".$row['EventName']."</b>";
+							
+						}
+				}
+			?>
+		
+		
+	</caption>
 	<thead>
+		
 		<tr>
-			<th class="th_row">Seat</th>
-			<th class="th_row">Row</th>
+			<td class="head" colspan=4>
+				<form method="get" action="welcome.php" id="seat_select" style="color: black">
+					<input name="EventID" value="<?php echo $event; ?>" hidden>
+					<select name="psect_select" onchange="submit()">
+						<option>Please select section</option>
+							<?php
+								$seat_sql = "SELECT DISTINCT pt.SectionID FROM PriceTiers pt 
+											  JOIN Seats s ON pt.SectionID = s.SectionID 
+											  LEFT OUTER JOIN Reservations r 
+											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY pt.SectionID ASC";
+								$seat_qry = mysqli_query($conn,$seat_sql);
+								while($prow = mysqli_fetch_assoc($seat_qry)) {
+									echo "<option";
+									if(isset($_REQUEST['psect_select']) and $_REQUEST['psect_select']==$prow['SectionID']) echo ' selected="selected"';
+									echo "> {$prow['SectionID']}</option>\n";
+								}
+							?>
+					</select>
+					<select id="row_select" name="row_select" onchange="submit()">
+						<option>Please select row</option>
+							<?php
+								$row_sql = "SELECT DISTINCT s.RowID FROM PriceTiers pt 
+											  JOIN Seats s ON pt.SectionID = s.SectionID 
+											  LEFT OUTER JOIN Reservations r 
+											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY s.RowID ASC";
+								$row_qry = mysqli_query($conn,$row_sql);
+								while($rrow = mysqli_fetch_assoc($row_qry)) {
+									echo "<option";
+									if(isset($_REQUEST['row_select']) and $_REQUEST['row_select']==$rrow['RowID']) echo ' selected="selected"';
+									echo "> {$rrow['RowID']}</option>\n";
+								}
+							?>
+					</select>
+					<select id="price_select" name="price_select" onchange="submit()">
+						<option>Please select price ($)</option>
+							<?php
+								$price_sql = "SELECT DISTINCT pt.SeatPrice FROM PriceTiers pt 
+											  JOIN Seats s ON pt.SectionID = s.SectionID 
+											  LEFT OUTER JOIN Reservations r 
+											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY SeatPrice DESC";
+								$price_qry = mysqli_query($conn,$price_sql);
+								while($prow = mysqli_fetch_assoc($price_qry)) {
+									echo "<option";
+									if(isset($_REQUEST['price_select']) and $_REQUEST['price_select']==$prow['SeatPrice']) echo ' selected="selected"';
+									echo "> {$prow['SeatPrice']}</option>\n";
+								}
+							?>
+					</select>
+				</form>
+			</td>
+		</tr>
+		<tr>
 			<th class="th_row">Section</th>
+			<th class="th_row">Seat</th>
 			<th class="th_row">Price</th>
+			<th class="th_row"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -148,19 +204,18 @@
 					LIMIT $offset, $no_of_records_per_page";
 				
 			if($res_data = mysqli_query($conn, $sql)){
-				if(mysqli_num_rows($result) > 0 and mysqli_fetch_array($res_data)){
+				if(mysqli_num_rows($res_data) > 0){
 					while($row = mysqli_fetch_array($res_data)){
-						echo "<tr class=\"clickable text-center\" 
-						onclick=\"window.location= 'Seat-Reservation.php?EventID=$event&SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."' \">";
-							echo "<td> " . $row['SeatID'] . "</td>";
-							echo "<td> " . $row['RowID'] . "</td>";
+						echo "<tr class=\"clickable text-center\">";
 							echo "<td>" . $row['SectionID'] . "</td>";
-							echo "<td>" . $row['SeatPrice'] . "</td>";
+							echo "<td> " . $row['RowID'] . $row['SeatID'] . "</td>";
+							echo "<td>$" . $row['SeatPrice'] . "</td>";
+							echo "<td><a class=\"btn btn-default\" href=\"Seat-Reservation.php?EventID=$event&SeatID=".$row['SeatID']."&RowID=".$row['RowID']."&SectionID=".$row['SectionID']."\">Select</a></td>";
 						echo "</tr>";
 					}
 				}
 				else {
-					echo "<tr><td colspan=4 >No rows available</td></tr>";
+					echo "<tr><td colspan=4>No rows available</td></tr>";
 				}
 			}
 			else {
@@ -170,13 +225,17 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<th class="th_row">Seat</th>
-			<th class="th_row">Row</th>
 			<th class="th_row">Section</th>
+			<th class="th_row">Seat</th>
 			<th class="th_row">Price</th>
+			<th class="th_row"></th>
 		</tr>
+		
 		<tr>
 			<td class="head" colspan=4><?php echo "Page $price_pageno out of $total_pages "?></td>
+		</tr>
+		<tr>
+			<td class="head" colspan=4><a href="welcome.php" class="btn btn-default my_other" style="">Change Event</a></td>
 		</tr>
 	</tfoot>
 
