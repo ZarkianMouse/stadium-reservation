@@ -96,13 +96,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
         body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
+        .wrapper{ width: 350px; padding: 20px; margin: auto; margin-top: 100px; }
+		.head {
+	border-style: solid;
+	border-color: #4682B4;
+	color: white;
+	background-color: #4682B4;
+}
+.my_delete {
+	background-color:#A69F57;
+	border-color: #A69F57;
+	color: white;
+}
+.my_delete:hover {
+	background-color: #6E6A3A;
+	color: white;
+}
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <h2>Login</h2>
-        <p>Please fill in your credentials to login.</p>
+    <div class="wrapper head">
+        <h2 style="color: #DDD474">Stadium Reservations</h2>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
                 <label>Username</label>
@@ -115,10 +129,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <span class="help-block"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Login">
+                <input type="submit" class="btn btn-default" value="Login">
             </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+            <p>Don't have an account? <a href="register.php" style="color: #DDD474">Sign up now</a>.</p>
         </form>
+		
     </div>    
 </body>
 </html>

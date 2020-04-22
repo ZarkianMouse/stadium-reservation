@@ -35,8 +35,6 @@ $param_id = $_SESSION["id"];
 			}
 		}
 		
-		
-		echo "<span> the condition is $res_condition </span>";
 	}
 	else {
 		$res_condition		=	"";
