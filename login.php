@@ -95,13 +95,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
     <style type="text/css">
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; margin: auto; margin-top: 100px; }
+        body{ font: 14px sans-serif; background: #4682B4 url('blue.jpg'); }
+        .wrapper{ width: 350px; padding: 20px; margin: auto; margin-top: 100px; border-style: solid; border-radius: 5%; }
 		.head {
 	border-style: solid;
-	border-color: #4682B4;
+	border-color: white;
 	color: white;
-	background-color: #4682B4;
+	background-color: #2C5171;
 }
 .my_delete {
 	background-color:#A69F57;
