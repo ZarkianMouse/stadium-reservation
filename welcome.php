@@ -36,6 +36,7 @@ else {
 			<p>
 				<a href="logout.php" class="btn btn-default my_primary">Sign Out of Your Account</a>
 				<a href="delete-user.php" class="btn btn-default my_delete">Delete Your Account</a>
+				<a href="reset-password.php" class="btn btn-default my_primary">Reset Your Password</a>
 			</p>
 		</div>
     </div>

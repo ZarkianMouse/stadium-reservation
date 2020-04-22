@@ -86,7 +86,7 @@
 						JOIN Seats s ON pt.SectionID = s.SectionID 
 						LEFT OUTER JOIN Reservations r 
 						ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-						WHERE r.EventID <> '$event' OR r.eventID is NULL $condition
+						WHERE r.EventID <> '$event' OR r.EventID is NULL $condition
 						ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
 	$result = mysqli_query($conn,$total_pages_sql);
 	$total_rows = mysqli_fetch_array($result)[0];
@@ -141,7 +141,7 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY pt.SectionID ASC";
+											  WHERE r.EventID <> '$event' OR r.EventID is NULL ORDER BY pt.SectionID ASC";
 								$seat_qry = mysqli_query($conn,$seat_sql);
 								while($prow = mysqli_fetch_assoc($seat_qry)) {
 									echo "<option";
@@ -157,7 +157,7 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY s.RowID ASC";
+											  WHERE  r.EventID <> '$event' OR r.EventID is NULL ORDER BY s.RowID ASC";
 								$row_qry = mysqli_query($conn,$row_sql);
 								while($rrow = mysqli_fetch_assoc($row_qry)) {
 									echo "<option";
@@ -173,7 +173,7 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID <> '$event' OR r.eventID is NULL ORDER BY SeatPrice DESC";
+											  WHERE r.EventID <> '$event' OR r.EventID is NULL ORDER BY SeatPrice DESC";
 								$price_qry = mysqli_query($conn,$price_sql);
 								while($prow = mysqli_fetch_assoc($price_qry)) {
 									echo "<option";
@@ -199,7 +199,7 @@
 					JOIN Seats s ON pt.SectionID = s.SectionID 
 					LEFT OUTER JOIN Reservations r 
 					ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-					WHERE r.EventID <> '$event' OR r.eventID is NULL $condition 
+					WHERE r.EventID <> '$event' OR r.EventID is NULL $condition 
 					ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC 
 					LIMIT $offset, $no_of_records_per_page";
 				

@@ -5,33 +5,33 @@ $param_id = $_SESSION["id"];
 
 <?php
 
-	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
+	if(isset($_REQUEST['r_price_select'])  or isset($_REQUEST['r_row_select']) or isset($_REQUEST['rsect_select']) ) {
 			$res_condition	=	"";
 			$hrf = "";
 			
-		if(isset($_GET['price_select']) and $_GET['price_select']!="")
+		if(isset($_GET['r_price_select']) and $_GET['r_price_select']!="")
 		{
-			$p = "&price_select=".$_GET['price_select'];
+			$p = "&r_price_select=".$_GET['r_price_select'];
 			$hrf .= $p;
-			if ($_GET['price_select']!="Please select price ($)") {
-			$res_condition		.=	"AND SeatPrice='".$_GET['price_select']."' ";
+			if ($_GET['r_price_select']!="Please select price ($)") {
+			$res_condition		.=	"AND SeatPrice='".$_GET['r_price_select']."' ";
 			}
 		}
-		if(isset($_GET['psect_select']) and $_GET['psect_select']!="")
+		if(isset($_GET['rsect_select']) and $_GET['rsect_select']!="")
 		{
 			
-			$s = "&psect_select=".$_GET['psect_select'];
+			$s = "&rsect_select=".$_GET['rsect_select'];
 			$hrf .= $s;
-			if ($_GET['psect_select']!="Please select section") {
-			$res_condition		.= "AND SectionID = '".$_GET['psect_select']."' ";
+			if ($_GET['rsect_select']!="Please select section") {
+			$res_condition		.= "AND SectionID = '".$_GET['rsect_select']."' ";
 			}
 		}
-		if(isset($_GET['row_select']) and $_GET['row_select']!="" and $_GET['row_select']!="Please select row")
+		if(isset($_GET['r_row_select']) and $_GET['r_row_select']!="" and $_GET['r_row_select']!="Please select row")
 		{
-			$r = "&row_select=".$_GET['row_select'];
+			$r = "&r_row_select=".$_GET['r_row_select'];
 			$hrf .= $r;
-			if($_GET['row_select']!="Please select row") {
-			$res_condition		.= "AND RowID = '".$_GET['row_select']."'";
+			if($_GET['r_row_select']!="Please select row") {
+			$res_condition		.= "AND RowID = '".$_GET['r_row_select']."'";
 			}
 		}
 		
@@ -67,35 +67,35 @@ $param_id = $_SESSION["id"];
 		<tr>
 			<td class="head" colspan=6>
 				<form method="get" action="welcome.php" id="seat_select" style="color: black">
-					<select name="psect_select" onchange="submit()">
+					<select name="rsect_select" onchange="submit()">
 						<option>Please select section</option>
 							<?php
 								$seat_qry = mysqli_query($conn,"SELECT DISTINCT SectionID FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' ORDER BY SectionID ASC");
 								while($prow = mysqli_fetch_assoc($seat_qry)) {
 									echo "<option";
-									if(isset($_REQUEST['psect_select']) and $_REQUEST['psect_select']==$prow['SectionID']) echo ' selected="selected"';
+									if(isset($_REQUEST['rsect_select']) and $_REQUEST['rsect_select']==$prow['SectionID']) echo ' selected="selected"';
 									echo "> {$prow['SectionID']}</option>\n";
 								}
 							?>
 					</select>
-					<select id="row_select" name="row_select" onchange="submit()">
+					<select id="r_row_select" name="r_row_select" onchange="submit()">
 						<option>Please select row</option>
 							<?php
 								$row_qry = mysqli_query($conn,"SELECT DISTINCT RowID FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' ORDER BY RowID ASC");
 								while($rrow = mysqli_fetch_assoc($row_qry)) {
 									echo "<option";
-									if(isset($_REQUEST['row_select']) and $_REQUEST['row_select']==$rrow['RowID']) echo ' selected="selected"';
+									if(isset($_REQUEST['r_row_select']) and $_REQUEST['r_row_select']==$rrow['RowID']) echo ' selected="selected"';
 									echo "> {$rrow['RowID']}</option>\n";
 								}
 							?>
 					</select>
-					<select id="price_select" name="price_select" onchange="submit()">
+					<select id="r_price_select" name="r_price_select" onchange="submit()">
 						<option>Please select price ($)</option>
 							<?php
 								$price_qry = mysqli_query($conn,"SELECT DISTINCT SeatPrice FROM PriceTiers NATURAL JOIN Reservations WHERE UserID = '$param_id' ORDER BY SeatPrice DESC");
 								while($prow = mysqli_fetch_assoc($price_qry)) {
 									echo "<option";
-									if(isset($_REQUEST['price_select']) and $_REQUEST['price_select']==$prow['SeatPrice']) echo ' selected="selected"';
+									if(isset($_REQUEST['r_price_select']) and $_REQUEST['r_price_select']==$prow['SeatPrice']) echo ' selected="selected"';
 									echo "> {$prow['SeatPrice']}</option>\n";
 								}
 							?>
