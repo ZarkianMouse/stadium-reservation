@@ -1,17 +1,13 @@
 <?php
-	$hrf = "";
-	// an example event number for testing
+	// sets value of $event to the one passed from event-selector.php
 	if (isset($_GET['EventID']) and $_GET['EventID']!="")
 	{
 		$event = $_GET['EventID'];
-		$hrf .= "&EventID=".$_GET['EventID'];
 	}
-	else {
+	else
+	{
 		$event = 2;
 	}
-?>
-
-<?php
 	
 	// This statement evaluates what form fields were set
 	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
@@ -157,7 +153,12 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID is NULL ORDER BY pt.SectionID ASC";
+											  WHERE r.ResNo NOT IN 
+													(SELECT ResNo FROM Reservations WHERE (SectionID,SeatID,RowID) IN
+														(SELECT SectionID, SeatID, RowID FROM Reservations WHERE ResNo IN 
+															(SELECT ResNo FROM Reservations WHERE EventID = '$event')))
+												OR r.EventID is NULL 
+											  ORDER BY pt.SectionID ASC";
 								$seat_qry = mysqli_query($conn,$seat_sql);
 								while($prow = mysqli_fetch_assoc($seat_qry)) {
 									echo "<option";
@@ -173,7 +174,12 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE  r.EventID is NULL ORDER BY s.RowID ASC";
+											  WHERE r.ResNo NOT IN 
+													(SELECT ResNo FROM Reservations WHERE (SectionID,SeatID,RowID) IN
+														(SELECT SectionID, SeatID, RowID FROM Reservations WHERE ResNo IN 
+															(SELECT ResNo FROM Reservations WHERE EventID = '$event')))
+												OR r.EventID is NULL  
+											  ORDER BY s.RowID ASC";
 								$row_qry = mysqli_query($conn,$row_sql);
 								while($rrow = mysqli_fetch_assoc($row_qry)) {
 									echo "<option";
@@ -189,7 +195,12 @@
 											  NATURAL JOIN Seats s
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID is NULL ORDER BY SeatPrice DESC";
+											  WHERE r.ResNo NOT IN 
+													(SELECT ResNo FROM Reservations WHERE (SectionID,SeatID,RowID) IN
+														(SELECT SectionID, SeatID, RowID FROM Reservations WHERE ResNo IN 
+															(SELECT ResNo FROM Reservations WHERE EventID = '$event')))
+												OR r.EventID is NULL 
+											 ORDER BY SeatPrice DESC";
 								$price_qry = mysqli_query($conn,$price_sql);
 								while($prow = mysqli_fetch_assoc($price_qry)) {
 									echo "<option";
