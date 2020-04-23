@@ -15,7 +15,7 @@
 	
 	// This statement evaluates what form fields were set
 	if(isset($_REQUEST['price_select'])  or isset($_REQUEST['row_select']) or isset($_REQUEST['psect_select']) ) {
-			$condition	=	"";
+			$search_condition	=	"";
 			
 		
 		$hrf = "";
@@ -35,7 +35,7 @@
 			$p = "&price_select=".$_GET['price_select'];
 			$hrf .= $p;
 			if ($_GET['price_select']!="Please select price ($)") {
-			$condition		.=	"AND pt.SeatPrice='".$_GET['price_select']."' ";
+			$search_condition		.=	"AND SeatPrice='".$_GET['price_select']."' ";
 			}
 		}
 		
@@ -46,7 +46,7 @@
 			$s = "&psect_select=".$_GET['psect_select'];
 			$hrf .= $s;
 			if ($_GET['psect_select']!="Please select section") {
-			$condition		.= "AND pt.SectionID = '".$_GET['psect_select']."' ";
+			$search_condition		.= "AND SectionID = '".$_GET['psect_select']."' ";
 			}
 		}
 		
@@ -56,13 +56,20 @@
 			$r = "&row_select=".$_GET['row_select'];
 			$hrf .= $r;
 			if($_GET['row_select']!="Please select row") {
-			$condition		.= "AND s.RowID = '".$_GET['row_select']."'";
+			$search_condition		.= "AND RowID = '".$_GET['row_select']."'";
 			}
+		}
+		
+		// check if string is empty
+		$search_condition = "WHERE ".ltrim($search_condition,"AND");
+		if ($search_condition == "WHERE ")
+		{
+			$search_condition = "";
 		}
 	}
 	// if no form fields are set, empty condition
 	else {
-		$condition		=	"";
+		$search_condition		=	"";
 	}
 	
 	
@@ -82,12 +89,21 @@
 
 	// for counting total number of entries in table based on condition
 	$total_pages_sql = "SELECT COUNT(*)
-						FROM PriceTiers pt 
-						JOIN Seats s ON pt.SectionID = s.SectionID 
-						LEFT OUTER JOIN Reservations r 
-						ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-						WHERE r.EventID <> '$event' OR r.EventID is NULL $condition
-						ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC";
+						FROM (SELECT pt.SeatPrice, pt.SectionID, s.RowID, s.SeatID
+								FROM PriceTiers pt 
+								NATURAL JOIN Seats s
+								LEFT OUTER JOIN Reservations r 
+								ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+								WHERE r.ResNo NOT IN 
+									(SELECT ResNo FROM Reservations WHERE (SectionID,SeatID,RowID) IN
+										(SELECT SectionID, SeatID, RowID FROM Reservations WHERE ResNo IN 
+											(SELECT ResNo FROM Reservations WHERE EventID = '$event')))
+								OR r.EventID is NULL
+								ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC) EventPriceTable 
+						$search_condition"; // search_condition = WHERE CLAUSE
+	
+	
+	// runs sql to find total number of pages/entries in table
 	$result = mysqli_query($conn,$total_pages_sql);
 	$total_rows = mysqli_fetch_array($result)[0];
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
@@ -141,7 +157,7 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID <> '$event' OR r.EventID is NULL ORDER BY pt.SectionID ASC";
+											  WHERE r.EventID is NULL ORDER BY pt.SectionID ASC";
 								$seat_qry = mysqli_query($conn,$seat_sql);
 								while($prow = mysqli_fetch_assoc($seat_qry)) {
 									echo "<option";
@@ -157,7 +173,7 @@
 											  JOIN Seats s ON pt.SectionID = s.SectionID 
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE  r.EventID <> '$event' OR r.EventID is NULL ORDER BY s.RowID ASC";
+											  WHERE  r.EventID is NULL ORDER BY s.RowID ASC";
 								$row_qry = mysqli_query($conn,$row_sql);
 								while($rrow = mysqli_fetch_assoc($row_qry)) {
 									echo "<option";
@@ -169,11 +185,11 @@
 					<select id="price_select" name="price_select" onchange="submit()">
 						<option>Please select price ($)</option>
 							<?php
-								$price_sql = "SELECT DISTINCT pt.SeatPrice FROM PriceTiers pt 
-											  JOIN Seats s ON pt.SectionID = s.SectionID 
+								$price_sql = "SELECT DISTINCT SeatPrice FROM PriceTiers pt 
+											  NATURAL JOIN Seats s
 											  LEFT OUTER JOIN Reservations r 
 											  ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-											  WHERE r.EventID <> '$event' OR r.EventID is NULL ORDER BY SeatPrice DESC";
+											  WHERE r.EventID is NULL ORDER BY SeatPrice DESC";
 								$price_qry = mysqli_query($conn,$price_sql);
 								while($prow = mysqli_fetch_assoc($price_qry)) {
 									echo "<option";
@@ -194,13 +210,19 @@
 	</thead>
 	<tbody>
 		<?php
-			$sql ="SELECT pt.SeatPrice, pt.SectionID, s.RowID, s.SeatID
-					FROM PriceTiers pt 
-					JOIN Seats s ON pt.SectionID = s.SectionID 
-					LEFT OUTER JOIN Reservations r 
-					ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
-					WHERE r.EventID <> '$event' OR r.EventID is NULL $condition 
-					ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC 
+			$sql ="SELECT SeatPrice, SectionID, RowID, SeatID
+					FROM (SELECT pt.SeatPrice, pt.SectionID, s.RowID, s.SeatID
+								FROM PriceTiers pt 
+								NATURAL JOIN Seats s
+								LEFT OUTER JOIN Reservations r 
+								ON s.RowID = r.RowID AND s.SeatID = r.SeatID AND s.SectionID = r.SectionID 
+								WHERE r.ResNo NOT IN 
+									(SELECT ResNo FROM Reservations WHERE (SectionID,SeatID,RowID) IN
+										(SELECT SectionID, SeatID, RowID FROM Reservations WHERE ResNo IN 
+											(SELECT ResNo FROM Reservations WHERE EventID = '$event')))
+								OR r.EventID is NULL
+								ORDER BY pt.SeatPrice DESC, pt.SectionID ASC, s.RowID ASC, s.SeatID ASC) EventPriceTable 
+					$search_condition
 					LIMIT $offset, $no_of_records_per_page";
 				
 			if($res_data = mysqli_query($conn, $sql)){
