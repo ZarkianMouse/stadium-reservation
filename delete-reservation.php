@@ -23,11 +23,6 @@ $RowID = $_GET['RowID'];
 $SectionID = $_GET['SectionID'];
 $param_id = $_SESSION["id"];
 
-echo $SeatID;
-echo $RowID;
-echo $SectionID;
-echo $param_id;
-
 
 if($seat_update = mysqli_query($conn,"DELETE FROM Reservations WHERE (UserID = $param_id AND EventID = $eventID AND SeatID = '$SeatID' AND RowID = '$RowID' AND SectionID = '$SectionID')")){
     header("location: welcome.php");

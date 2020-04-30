@@ -1,9 +1,8 @@
 <?php
-$param_id = $_SESSION["id"];
-?>
+	// pagination was derived from a tutorial on "My Programming Tutorials"
+	// https://www.myprogrammingtutorials.com/create-pagination-with-php-and-mysql.html
 
-
-<?php
+	$param_id = $_SESSION["id"];
 
 	if(isset($_REQUEST['r_price_select'])  or isset($_REQUEST['r_row_select']) or isset($_REQUEST['rsect_select']) ) {
 			$res_condition	=	"";

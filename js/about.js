@@ -1,3 +1,6 @@
+// Used from tutorial on W3Schools
+// https://www.w3schools.com/howto/howto_js_tabs.asp
+
 var tabButtons = document.querySelectorAll(".tabContainer .buttonContainer button");
 var tabPanels = document.querySelectorAll(".tabContainer .tabPanel");
 

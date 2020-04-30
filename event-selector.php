@@ -1,4 +1,8 @@
 <?php
+	// pagination was derived from a tutorial on "My Programming Tutorials"
+	// https://www.myprogrammingtutorials.com/create-pagination-with-php-and-mysql.html
+
+
 	$hrf="";
 	// for current page in table
 	if (isset($_GET['event_pageno'])) {

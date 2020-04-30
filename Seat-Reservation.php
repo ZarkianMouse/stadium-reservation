@@ -23,11 +23,6 @@ $RowID = $_GET['RowID'];
 $SectionID = $_GET['SectionID'];
 $param_id = $_SESSION["id"];
 
-echo $SeatID;
-echo $RowID;
-echo $SectionID;
-echo $param_id;
-
 
 if($seat_update = mysqli_query($conn,"INSERT INTO Reservations(UserID, EventID, SeatID, RowID, SectionID) VALUES ('$param_id', '$eventID', '$SeatID', '$RowID', '$SectionID')")){
     header("location: welcome.php");

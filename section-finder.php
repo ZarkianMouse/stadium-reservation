@@ -1,4 +1,8 @@
 <?php
+	// pagination was derived from a tutorial on "My Programming Tutorials"
+	// https://www.myprogrammingtutorials.com/create-pagination-with-php-and-mysql.html
+
+
 	// sets value of $event to the one passed from event-selector.php
 	if (isset($_GET['EventID']) and $_GET['EventID']!="")
 	{
